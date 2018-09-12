@@ -151,6 +151,7 @@
       transition-duration: 0.5s;
       -webkit-transition-duration: 0.5s; }
     .ads .slide:nth-child(1) {
+      margin-left: 0px;
       z-index: 4; }
       .ads .slide:nth-child(1) img {
         width: 250px;
@@ -169,14 +170,17 @@
         width: 226px; }
     .ads .slide:nth-child(4).animating {
       margin-left: -274px; }
+      .ads .slide:nth-child(4).animating img {
+        opacity: 1;
+        width: 250px; }
     .ads .slide:nth-child(4):not(.animating) {
       margin-left: -202px;
-      z-index: 1; }
+      z-index: 1;
+      transition-duration: 0.4s;
+      -webkit-transition-duration: 0.4s; }
       .ads .slide:nth-child(4):not(.animating) img {
         opacity: 0.25;
-        width: 214px;
-        transition-duration: 0s;
-        -webkit-transition-duration: 0s; }
+        width: 214px; }
   .ads .slides-footer {
     -webkit-display: flex;
     -moz-display: flex;

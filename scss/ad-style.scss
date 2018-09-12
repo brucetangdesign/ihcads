@@ -165,6 +165,7 @@
     }
 
     &:nth-child(1){
+      margin-left: 0px;
       z-index: 4;
 
       img{
@@ -196,19 +197,22 @@
     &:nth-child(4){
       &.animating{
         margin-left: -($slides-width - 12) + px;
+        img{
+          opacity: 1;
+          width: $img-width + px;
+        }
       }
 
       &:not(.animating){
         margin-left: -($child-4-w - 12) + px;
         z-index: 1;
-        //transition-duration: 1s;
-        //-webkit-transition-duration: 1s;
+
+        transition-duration: 0.4s;
+        -webkit-transition-duration: 0.4s;
 
         img{
           opacity: 0.25;
           width: $child-4-w + px;
-          transition-duration: 0s;
-          -webkit-transition-duration: 0s;
         }
       }
     }

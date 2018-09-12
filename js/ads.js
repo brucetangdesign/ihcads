@@ -125,16 +125,29 @@ $( document ).ready(function() {
       $curSlide.addClass("animating");
 
       //move the slide
-      TweenMax.to($curSlide,0.4,{x: finalPos, ease:Power2.easeOut, onComplete: completeAnimation, onCompleteParams: [$curSlide]});
+      TweenMax.to($curSlide,0.3,{x: -curSlideWidth, ease:Power2.easeIn, onComplete: moveBack, onCompleteParams: [$curSlide]});
+
       //TweenMax.set($curSlide.find("img"),{opacity: 1, width: curSlideWidth});
-      $curSlide.appendTo($slides);
+      //$curSlide.appendTo($slides);
 
 
       //Animation complete, move old slide to back, animate new slide, reset props
+      function moveBack($slideToPutBack){
+        $curSlide.appendTo($slides);
+
+        shuffleBack($slideToPutBack);
+      }
+      function shuffleBack($slideToPutBack){
+        TweenMax.to($curSlide,0.2,{x: 0,ease:Power2.easeOut});
+
+        TweenMax.set($curSlide,{y:0,delay:0.01,onComplete: completeAnimation, onCompleteParams: [$curSlide]});
+        //$slideToPutBack.removeClass("animating");
+      }
+
       function completeAnimation($slideToPutBack){
         $slideToPutBack.removeClass("animating");
-        TweenMax.set($slideToPutBack,{clearProps:"all"});
-        TweenMax.set($slideToPutBack.find("img"),{clearProps:"all"});
+        //TweenMax.set($slideToPutBack,{clearProps:"all"});
+        //TweenMax.set($slideToPutBack.find("img"),{clearProps:"all"});
       }
     }
   }
