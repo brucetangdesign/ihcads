@@ -148,13 +148,31 @@
     @include prefixr (align-items, center);
     position: relative;
     z-index: 1;
-    width: $slides-width + px;
+    width: $img-width + px;
+    height: $img-width + px;
   }
 
   .slide{
-    position: relative;
+    position: absolute;
     background-color: #000000;
+    width: $img-width + px;
 
+    &:nth-child(1){
+      z-index: 4;
+    }
+
+    &:nth-child(2){
+      z-index: 3;
+    }
+
+    &:nth-child(3){
+      z-index: 2;
+    }
+
+    &:nth-child(4){
+      z-index: 1;
+    }
+/*
     img{
       width: $img-width + px;
       opacity: 1;
@@ -215,7 +233,7 @@
           width: $child-4-w + px;
         }
       }
-    }
+    }*/
 
 /*
     img{

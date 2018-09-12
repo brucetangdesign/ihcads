@@ -17,11 +17,19 @@ $( document ).ready(function() {
     var $button;
     //var $prevArrow = $controls.find(".slideshow-arrow.prev");
     //var $nextArrow = $controls.find(".slideshow-arrow.next");
-    //var $buttonContainer = $controls.find("li");
     var curSlideNum = 0;
-    var numSlides;
+    var numSlides = $slides.children().length;
     var maxSlides = 4;
     var slideDirection = "left";
+    var decayAm = 12;
+    var opacityDecayPerc = 0.25;
+    var spacing = 12;
+    var baseWidth = parseInt($slides.width());
+
+    //Move Images
+    moveImages(1);
+    //make the slides conatiner larger to accommodate all images in their new positions
+    TweenMax.to($slides,1,{width: baseWidth + (baseWidth-(baseWidth - (decayAm * (numSlides-1)))), ease: Power3.easeInOut});
 
     //set up slide controls
     createSlideControls();
@@ -29,8 +37,27 @@ $( document ).ready(function() {
     //init slide controls
     initSlideControls();
 
+    //put images in their initial spot and set opacity and width
+    function moveImages(time = 0.6){
+      $slides.find(".slide").each(function(index){
+        var newWidth;
+        var newOpacity;
+
+        newWidth = baseWidth - (decayAm * index);
+        newOpacity = 1 - (opacityDecayPerc * index);
+
+        TweenMax.to($(this),time,{
+          width: newWidth,
+          x: baseWidth - newWidth + (spacing * index),
+          ease: Power3.easeInOut
+        });
+
+        TweenMax.to($(this).find("img"),time,{opacity: newOpacity});
+      });
+    }
+
     function createSlideControls(){
-      numSlides = $slides.children().length;
+      //numSlides = $slides.children().length;
       var $slidesFooter = '<div class="slides-footer">' +
                             '<div class="slideshow-control">' +
                               '<div class="slideshow-arrow prev"></div>' +
@@ -83,8 +110,9 @@ $( document ).ready(function() {
       var $newSlide;
       var $curSlide;
       var $slide = $slides.find(".slide");
+      var slidesToMove = [];
 
-      //Store the currently selected slide and the next slide
+      //get the new slide
       $slide.each(function(index){
         $thisSlide = $(this);
         var imgSrc = $thisSlide.find("img").attr("src");
@@ -93,61 +121,55 @@ $( document ).ready(function() {
         if (imgSrc == newSlideSrc){
           $newSlide = $thisSlide;
         }
+      });
 
-        //Get current slide
-        $button.each(function(index){
-          if(index == curSlideNum){
-            if($(this).val() == imgSrc){
-              $curSlide = $thisSlide;
-            }
-          }
-        });
+      //Store the slides that have to be moved (anything above the new slide)
+      $slide.each(function(index){
+        $thisSlide = $(this);
+        var imgSrc = $thisSlide.find("img").attr("src");
+
+        if(index < $newSlide.index()){
+          slidesToMove.push($(this));
+        }
 
         //unbind any drag events
         //$(this).off("mousedown mouseup touchstart touchend mousemove touchmove");
       });
 
+
       //Animate current slide off screen
       //calculate distance from edge of slide to left side of screen
-      var curSlidePos = $curSlide.offset().left - $curSlide.position().left;
+      //var curSlidePos = $curSlide.offset().left - $curSlide.position().left;
       //move the slide
-      var finalPos = -(curSlidePos + $curSlide.find("img").width());
+      //var finalPos = -(curSlidePos + $curSlide.find("img").width());
 
-      if(slideDirection == "right"){
+      /*if(slideDirection == "right"){
         finalPos = $(window).width()-curSlidePos;
+      }*/
+
+      //Move any slides above the new slide
+      for(var i = 0; i< slidesToMove.length; i++){
+        var completeFunc = null;
+
+        if(i == slidesToMove.length-1){
+          completeFunc = completeAnimation;
+        }
+
+        TweenMax.to(slidesToMove[i],0.35,{
+          x: slidesToMove[i].position().left-slidesToMove[i].width(),
+          delay: 0.05 * i,
+          ease:Power3.easeInOut,
+          onComplete: completeFunc
+          });
       }
 
-      //css transition will not work on the slide that is being appened. Need to animate with JS
-      var $curSlideImg = $curSlide.find("img");
-      var curSlideWidth = $curSlideImg.width();
-      var curSlideNewWidth = $slides.children().eq(numSlides-1).find("img").width();
-      var marginOffset = parseInt($slides.children().eq(numSlides-1).css("marginLeft"));
-      $curSlide.addClass("animating");
+      //Animation complete, move old slide to back
+      function completeAnimation(){
+        for(var i = 0; i< slidesToMove.length; i++){
+          slidesToMove[i].appendTo($slides);
+        }
 
-      //move the slide
-      TweenMax.to($curSlide,0.3,{x: -curSlideWidth, ease:Power2.easeIn, onComplete: moveBack, onCompleteParams: [$curSlide]});
-
-      //TweenMax.set($curSlide.find("img"),{opacity: 1, width: curSlideWidth});
-      //$curSlide.appendTo($slides);
-
-
-      //Animation complete, move old slide to back, animate new slide, reset props
-      function moveBack($slideToPutBack){
-        $curSlide.appendTo($slides);
-
-        shuffleBack($slideToPutBack);
-      }
-      function shuffleBack($slideToPutBack){
-        TweenMax.to($curSlide,0.2,{x: 0,ease:Power2.easeOut});
-
-        TweenMax.set($curSlide,{y:0,delay:0.01,onComplete: completeAnimation, onCompleteParams: [$curSlide]});
-        //$slideToPutBack.removeClass("animating");
-      }
-
-      function completeAnimation($slideToPutBack){
-        $slideToPutBack.removeClass("animating");
-        //TweenMax.set($slideToPutBack,{clearProps:"all"});
-        //TweenMax.set($slideToPutBack.find("img"),{clearProps:"all"});
+        moveImages();
       }
     }
   }
