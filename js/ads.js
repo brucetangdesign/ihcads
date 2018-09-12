@@ -26,10 +26,18 @@ $( document ).ready(function() {
     var spacing = 12;
     var baseWidth = parseInt($slides.width());
 
+
+    //disable links for any images not on top
+    $slides.find(".slide").each(function(index){
+      $(this).find("a").click(function(e){
+        if($(this).parent().index() != 0){
+          e.preventDefault();
+        }
+      });
+    });
+
     //Move Images
     moveImages(1);
-    //make the slides conatiner larger to accommodate all images in their new positions
-    TweenMax.to($slides,1,{width: baseWidth + (baseWidth-(baseWidth - (decayAm * (numSlides-1)))), ease: Power3.easeInOut});
 
     //set up slide controls
     createSlideControls();
@@ -37,8 +45,18 @@ $( document ).ready(function() {
     //init slide controls
     initSlideControls();
 
+    //init slides rollover
+    initSlidesRollover();
+
+    function disableLinks(){
+
+    }
+
     //put images in their initial spot and set opacity and width
     function moveImages(time = 0.6){
+      TweenMax.killTweensOf($slides);
+      TweenMax.killChildTweensOf($slides);
+
       $slides.find(".slide").each(function(index){
         var newWidth;
         var newOpacity;
@@ -54,6 +72,33 @@ $( document ).ready(function() {
 
         TweenMax.to($(this).find("img"),time,{opacity: newOpacity});
       });
+
+      //make the slides conatiner larger to accommodate all images in their new positions
+      var newSlidesWidth = baseWidth + (baseWidth-(baseWidth - (decayAm * (numSlides-1))));
+      if($slides.width() != newSlidesWidth){
+        TweenMax.to($slides,time,{width: newSlidesWidth, ease: Power3.easeInOut});
+      }
+    }
+
+    //fan images out
+    function spreadImages(time = 0.5){
+      TweenMax.killTweensOf($slides);
+      TweenMax.killChildTweensOf($slides);
+      var newSlidesWidth = $slides.parent().width() * 0.92;
+
+      $slides.find(".slide").each(function(index){
+        var newX = (newSlidesWidth/numSlides) * index;
+
+        TweenMax.to($(this),time,{
+          x: newX,
+          ease: Power3.easeInOut
+        });
+      });
+
+      //make the slides conatiner larger to accommodate all images in their new positions
+      if($slides.width() != newSlidesWidth){
+        TweenMax.to($slides,time,{width: newSlidesWidth, ease: Power3.easeInOut});
+      }
     }
 
     function createSlideControls(){
@@ -97,6 +142,9 @@ $( document ).ready(function() {
         var lastDisplayedButton = maxSlides-1;
 
         $(this).click(function(){
+          //stop rollover of slides
+          killSlidesRollover();
+
           //Move the Slides
           animateSlides($(this).val());
 
@@ -167,10 +215,28 @@ $( document ).ready(function() {
       function completeAnimation(){
         for(var i = 0; i< slidesToMove.length; i++){
           slidesToMove[i].appendTo($slides);
+          disableLinks();
         }
 
         moveImages();
+        initSlidesRollover();
       }
+    }
+
+    function initSlidesRollover(){
+      $slides.hover(over,out);
+
+      function over(){
+        spreadImages();
+      }
+
+      function out(){
+        moveImages();
+      }
+    }
+
+    function killSlidesRollover(){
+      $slides.off();
     }
   }
 });
