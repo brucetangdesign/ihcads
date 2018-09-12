@@ -67,18 +67,25 @@ $( document ).ready(function() {
       $slides.find(".slide").each(function(index){
         var newWidth;
         var newOpacity;
+        var completeFunc = null;
 
         newWidth = baseWidth - (decayAm * index);
         newOpacity = 1 - (opacityDecayPerc * index);
 
+        if(index == numSlides-1){
+          completeFunc = initSlidesRollover;
+        }
+
         TweenMax.to($(this),time,{
           width: newWidth,
           x: baseWidth - newWidth + (spacing * index),
-          ease: Power3.easeOut
+          ease: Power3.easeOut,
+          onComplete: completeFunc
         });
 
         TweenMax.to($(this).find("img"),time,{opacity: newOpacity});
       });
+
 
       //make the slides conatiner larger to accommodate all images in their new positions
       var newSlidesWidth = baseWidth + (baseWidth-(baseWidth - (decayAm * (numSlides-1))));
@@ -219,7 +226,6 @@ $( document ).ready(function() {
         }
 
         moveImages();
-        initSlidesRollover();
         initSlideDrag();
         slideDragged = false;
         slideDirection = "left";
