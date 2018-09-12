@@ -15,8 +15,6 @@ $( document ).ready(function() {
     var $slides = $slideshow.find(".slides");
     var $controls;
     var $button;
-    //var $prevArrow = $controls.find(".slideshow-arrow.prev");
-    //var $nextArrow = $controls.find(".slideshow-arrow.next");
     var curSlideNum = 0;
     var numSlides = $slides.children().length;
     var maxSlides = 4;
@@ -25,13 +23,23 @@ $( document ).ready(function() {
     var opacityDecayPerc = 0.25;
     var spacing = 12;
     var baseWidth = parseInt($slides.width());
+    var slideDragged = false;
 
-
-    //disable links for any images not on top
+    //Slide click
     $slides.find(".slide").each(function(index){
+      var imgSrc = $(this).find("img").attr("src");
       $(this).find("a").click(function(e){
+        //shuffle images if clicked slide is not on top
         if($(this).parent().index() != 0){
+          //disable links for any images not on top
           e.preventDefault();
+
+          //find the corresponding button and click it
+          $button.each(function(){
+            if($(this).val() == imgSrc){
+              $(this).trigger("click");
+            }
+          });
         }
       });
     });
@@ -48,12 +56,11 @@ $( document ).ready(function() {
     //init slides rollover
     initSlidesRollover();
 
-    function disableLinks(){
-
-    }
+    //init slide drag
+    initSlideDrag();
 
     //put images in their initial spot and set opacity and width
-    function moveImages(time = 0.6){
+    function moveImages(time = 0.45){
       TweenMax.killTweensOf($slides);
       TweenMax.killChildTweensOf($slides);
 
@@ -67,7 +74,7 @@ $( document ).ready(function() {
         TweenMax.to($(this),time,{
           width: newWidth,
           x: baseWidth - newWidth + (spacing * index),
-          ease: Power3.easeInOut
+          ease: Power3.easeOut
         });
 
         TweenMax.to($(this).find("img"),time,{opacity: newOpacity});
@@ -76,7 +83,7 @@ $( document ).ready(function() {
       //make the slides conatiner larger to accommodate all images in their new positions
       var newSlidesWidth = baseWidth + (baseWidth-(baseWidth - (decayAm * (numSlides-1))));
       if($slides.width() != newSlidesWidth){
-        TweenMax.to($slides,time,{width: newSlidesWidth, ease: Power3.easeInOut});
+        TweenMax.to($slides,time,{width: newSlidesWidth, ease: Power3.easeOut});
       }
     }
 
@@ -85,9 +92,14 @@ $( document ).ready(function() {
       TweenMax.killTweensOf($slides);
       TweenMax.killChildTweensOf($slides);
       var newSlidesWidth = $slides.parent().width() * 0.92;
+      var addedSlidesWidth = 0;
 
       $slides.find(".slide").each(function(index){
-        var newX = (newSlidesWidth/numSlides) * index;
+        addedSlidesWidth = $(this).width() * numSlides;
+
+        var offset = (addedSlidesWidth - newSlidesWidth)/(numSlides-1);
+
+        var newX = ($(this).width() * index) - (offset * index);
 
         TweenMax.to($(this),time,{
           x: newX,
@@ -161,15 +173,7 @@ $( document ).ready(function() {
       var slidesToMove = [];
 
       //get the new slide
-      $slide.each(function(index){
-        $thisSlide = $(this);
-        var imgSrc = $thisSlide.find("img").attr("src");
-
-        //New slide
-        if (imgSrc == newSlideSrc){
-          $newSlide = $thisSlide;
-        }
-      });
+      $newSlide = $slides.find("[src='"+ newSlideSrc +"']").parents(".slide");
 
       //Store the slides that have to be moved (anything above the new slide)
       $slide.each(function(index){
@@ -181,45 +185,44 @@ $( document ).ready(function() {
         }
 
         //unbind any drag events
-        //$(this).off("mousedown mouseup touchstart touchend mousemove touchmove");
+        $(this).off("touchstart touchend mouseleave touchmove");
       });
 
 
       //Animate current slide off screen
-      //calculate distance from edge of slide to left side of screen
-      //var curSlidePos = $curSlide.offset().left - $curSlide.position().left;
-      //move the slide
-      //var finalPos = -(curSlidePos + $curSlide.find("img").width());
 
-      /*if(slideDirection == "right"){
-        finalPos = $(window).width()-curSlidePos;
-      }*/
+      //Move any slides above the new slide (only animate if user is not rolled over slides)
+      if(!slideDragged){
+        for(var i = 0; i< slidesToMove.length; i++){
+          var completeFunc = null;
 
-      //Move any slides above the new slide
-      for(var i = 0; i< slidesToMove.length; i++){
-        var completeFunc = null;
+          if(i == slidesToMove.length-1){
+            completeFunc = completeAnimation;
+          }
 
-        if(i == slidesToMove.length-1){
-          completeFunc = completeAnimation;
+          TweenMax.to(slidesToMove[i],0.4,{
+            x: -slidesToMove[i].width(),
+            delay: 0.03 * i,
+            ease:Power2.easeInOut,
+            onComplete: completeFunc
+            });
         }
-
-        TweenMax.to(slidesToMove[i],0.35,{
-          x: slidesToMove[i].position().left-slidesToMove[i].width(),
-          delay: 0.05 * i,
-          ease:Power3.easeInOut,
-          onComplete: completeFunc
-          });
+      }
+      else{
+        completeAnimation();
       }
 
       //Animation complete, move old slide to back
       function completeAnimation(){
         for(var i = 0; i< slidesToMove.length; i++){
           slidesToMove[i].appendTo($slides);
-          disableLinks();
         }
 
         moveImages();
         initSlidesRollover();
+        initSlideDrag();
+        slideDragged = false;
+        slideDirection = "left";
       }
     }
 
@@ -237,6 +240,78 @@ $( document ).ready(function() {
 
     function killSlidesRollover(){
       $slides.off();
+    }
+
+    function initSlideDrag(){
+      setHandlers($slides.find(".slide:eq(0)"));
+
+      function setHandlers($slide){
+        var baseX = $slide.offset().left;
+        var baseClickX;
+        var amountMoved;
+
+        $slide.on("touchstart", function(event){
+          var clientX = event.touches[0].clientX;
+          baseClickX = clientX - baseX;
+
+          $(this).on("touchmove",function(event){
+            var shiftX;
+            shiftX = event.touches[0].clientX - baseX;
+            amountMoved = -(baseClickX - shiftX);
+            TweenMax.set($(this),{x:amountMoved});
+
+            checkAmountMoved(true,event);
+          });
+
+
+          $(this).on("touchend mouseleave",function(event){
+            $(this).off("touchmove mouseleave touchend");
+            checkAmountMoved(false,event);
+          });
+        });
+
+        function checkAmountMoved(isDragging,event){
+          var $curSlide;
+
+          if(!$(event.target).hasClass("slide")){
+            $curSlide = $(event.target).parents(".slide");
+          }
+          var limit = 200;
+          if($(window).width() < 768){
+            limit = 100;
+          }
+
+          if(isDragging){
+            if(amountMoved > limit || amountMoved < -limit){
+              $curSlide.off();
+              dragSwitchImage($curSlide)
+              /*if(amountMoved > limit){
+                slideDirection = "right";
+                dragSwitchImage($curSlide);
+              }
+              else{
+                slideDirection = "left";
+                dragSwitchImage($curSlide);
+              }*/
+            }
+          }
+          else{
+            TweenMax.to($slide,0.2,{x:0, ease: Power3.easeOut, onComplete: clearProps});
+          }
+
+          function clearProps(){
+            TweenMax.set($slide,{clearProps: "transform"});
+          }
+
+          function dragSwitchImage($curSlide){
+            var $nextSlideLink = $slides.find(".slide:eq("+($curSlide.index()+1)+")");
+            $nextSlideLink = $nextSlideLink.find("a");
+
+            slideDragged = true;
+            $nextSlideLink.trigger("click");
+          }
+        }
+      }
     }
   }
 });
