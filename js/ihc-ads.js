@@ -1,5 +1,5 @@
 $( document ).ready(function() {
-  var $ads = $(".ads");
+  var $ads = $(".ihc-ads");
 
   //Check if there is a slideshow on the page. If so activate it.
   if($ads.length){

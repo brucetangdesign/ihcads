@@ -1,7 +1,7 @@
-.ads {
+.ihc-ads {
   background-image: url("../images/ad-bg-pattern.png");
   background-repeat: repeat; }
-  .ads .ad-title {
+  .ihc-ads .ihc-ad-title {
     margin-top: 40px;
     margin-bottom: 20px;
     margin-left: auto;
@@ -11,7 +11,7 @@
     font-size: 13px;
     font-weight: 400;
     color: #aaaaaa; }
-  .ads .slideshow-section {
+  .ihc-ads .slideshow-section {
     -webkit-display: flex;
     -moz-display: flex;
     -ms-display: flex;
@@ -32,7 +32,7 @@
     margin-right: auto;
     padding: 0;
     z-index: 200; }
-    .ads .slideshow-section img {
+    .ihc-ads .slideshow-section img {
       width: 100%;
       display: block;
       -webkit-user-select: none;
@@ -40,7 +40,7 @@
       -moz-user-select: none;
       -o-user-select: none;
       user-select: none; }
-  .ads .slides-container {
+  .ihc-ads .slides-container {
     -webkit-display: flex;
     -moz-display: flex;
     -ms-display: flex;
@@ -52,13 +52,13 @@
     display: flex;
     position: relative;
     width: 100%; }
-  .ads .slideshow, .ads .slides-footer {
+  .ihc-ads .slideshow, .ihc-ads .slides-footer {
     position: relative;
     width: 100%; }
     @media (max-width: 768px) {
-      .ads .slideshow, .ads .slides-footer {
+      .ihc-ads .slideshow, .ihc-ads .slides-footer {
         position: static; } }
-  .ads .slideshow {
+  .ihc-ads .slideshow {
     z-index: 200;
     -webkit-display: flex;
     -moz-display: flex;
@@ -75,7 +75,7 @@
     -o-justify-content: center;
     justify-content: center;
     flex-wrap: wrap; }
-  .ads .slides {
+  .ihc-ads .slides {
     -webkit-display: flex;
     -moz-display: flex;
     -ms-display: flex;
@@ -94,7 +94,7 @@
     z-index: 1;
     width: 250px;
     height: 250px; }
-  .ads .slide {
+  .ihc-ads .slide {
     position: absolute;
     background-color: #000000;
     width: 250px;
@@ -208,15 +208,15 @@
           img{ opacity: 0.25; transition-delay: 0.4s; -webkit-transition-delay: 0.4s;}
         }
         */ }
-    .ads .slide:nth-child(1) {
+    .ihc-ads .slide:nth-child(1) {
       z-index: 4; }
-    .ads .slide:nth-child(2) {
+    .ihc-ads .slide:nth-child(2) {
       z-index: 3; }
-    .ads .slide:nth-child(3) {
+    .ihc-ads .slide:nth-child(3) {
       z-index: 2; }
-    .ads .slide:nth-child(4) {
+    .ihc-ads .slide:nth-child(4) {
       z-index: 1; }
-  .ads .slides-footer {
+  .ihc-ads .slides-footer {
     -webkit-display: flex;
     -moz-display: flex;
     -ms-display: flex;
@@ -238,9 +238,9 @@
     align-items: baseline;
     padding: 13px 0;
     margin-left: auto; }
-    .ads .slides-footer.right {
+    .ihc-ads .slides-footer.right {
       margin-left: 0; }
-  .ads .slideshow-control {
+  .ihc-ads .slideshow-control {
     -webkit-display: flex;
     -moz-display: flex;
     -ms-display: flex;
@@ -257,11 +257,11 @@
     align-items: center;
     margin: auto; }
     @media (max-width: 480px) {
-      .ads .slideshow-control {
+      .ihc-ads .slideshow-control {
         margin-left: auto;
         margin-right: auto;
         margin-bottom: 20px; } }
-  .ads .slideshow-arrow {
+  .ihc-ads .slideshow-arrow {
     display: none;
     /*
     width: 9px;
@@ -284,7 +284,7 @@
       &.next{ margin-left: 15px; }
     }
     */ }
-  .ads .control-button-container, .ads ul.control-button-container {
+  .ihc-ads .control-button-container, .ihc-ads ul.control-button-container {
     -webkit-display: flex;
     -moz-display: flex;
     -ms-display: flex;
@@ -304,24 +304,24 @@
     list-style-type: none;
     padding: 0;
     margin: auto; }
-    .ads .control-button-container li, .ads ul.control-button-container li {
+    .ihc-ads .control-button-container li, .ihc-ads ul.control-button-container li {
       padding-left: 6px !important;
       padding-right: 6px !important; }
-  .ads .slide-button-container {
+  .ihc-ads .slide-button-container {
     position: relative; }
-    .ads .slide-button-container > * {
+    .ihc-ads .slide-button-container > * {
       width: 10px;
       height: 10px; }
-    .ads .slide-button-container input {
+    .ihc-ads .slide-button-container input {
       position: absolute;
       margin: 0;
       opacity: 0;
       cursor: pointer; }
-      .ads .slide-button-container input:checked + span {
+      .ihc-ads .slide-button-container input:checked + span {
         -webkit-transition: background-color 0.3s linear;
         transition: background-color 0.3s linear;
         background-color: #acacac; }
-    .ads .slide-button-container span {
+    .ihc-ads .slide-button-container span {
       display: block;
       top: 0;
       left: 0;
