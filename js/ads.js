@@ -8,26 +8,34 @@ $( document ).ready(function() {
     });
   }
 
-  //Initialize slideshow
+  //Activate the slideshow
   function activateSlideshow($ads){
     var $slideshow = $ads.find(".slideshow");
     var $slidesContainer = $ads.find(".slides-container");
     var $slides = $slideshow.find(".slides");
     var $controls;
     var $button;
-    var curSlideNum = 0;
+    var curSlideNum = 0; //track which slide is on top
     var numSlides = $slides.children().length;
     var maxSlides = 4;
-    var slideDirection = "left";
-    var decayAm = 12;
-    var opacityDecayPerc = 0.25;
-    var spacing = 12;
     var baseWidth = parseInt($slides.width());
+
+    //direction the slide will animate - can be left or right
+    var slideDirection = "left";
+
+    //each image after the top will have a transparency that will increase in opacity by 25% as you go back in th estack
+    var opacityDecayPerc = 0.25;
+
+    //each slide will be 12 pixels shorter in width as you go back from the top
+    var decayAm = 12;
+
+    var spacing = 12;
     var slideDragged = false;
 
     //Slide click
     $slides.find(".slide").each(function(index){
       var imgSrc = $(this).find("img").attr("src");
+
       $(this).find("a").click(function(e){
         //shuffle images if clicked slide is not on top
         if($(this).parent().index() != 0){
@@ -50,17 +58,18 @@ $( document ).ready(function() {
     //set up slide controls
     createSlideControls();
 
-    //init slide controls
+    //initialize slide controls
     initSlideControls();
 
-    //init slides rollover
+    //initialize slides rollover
     initSlidesRollover();
 
-    //init slide drag
+    //initialize slide drag
     initSlideDrag();
 
-    //put images in their initial spot and set opacity and width
+    //put images in their spot and set opacity and width
     function moveImages(time = 0.45){
+      //stop any tweens
       TweenMax.killTweensOf($slides);
       TweenMax.killChildTweensOf($slides);
 
@@ -69,13 +78,16 @@ $( document ).ready(function() {
         var newOpacity;
         var completeFunc = null;
 
+        //get the new slide width and image opacity (determined by position in the stack)
         newWidth = baseWidth - (decayAm * index);
         newOpacity = 1 - (opacityDecayPerc * index);
 
+        //if this is th elast slide then turn the rollover actions back on
         if(index == numSlides-1){
           completeFunc = initSlidesRollover;
         }
 
+        //animate the slide to it's new position
         TweenMax.to($(this),time,{
           width: newWidth,
           x: baseWidth - newWidth + (spacing * index),
@@ -83,6 +95,7 @@ $( document ).ready(function() {
           onComplete: completeFunc
         });
 
+        //animate th eimage opacity
         TweenMax.to($(this).find("img"),time,{opacity: newOpacity});
       });
 
@@ -94,13 +107,16 @@ $( document ).ready(function() {
       }
     }
 
-    //fan images out
+    //spread images out (when stack is rolled over)
     function spreadImages(time = 0.5){
+      //stop any running tweens
       TweenMax.killTweensOf($slides);
       TweenMax.killChildTweensOf($slides);
+
       var newSlidesWidth = $slides.parent().width() * 0.92;
       var addedSlidesWidth = 0;
 
+      //animate each slide
       $slides.find(".slide").each(function(index){
         addedSlidesWidth = $(this).width() * numSlides;
 
@@ -120,8 +136,8 @@ $( document ).ready(function() {
       }
     }
 
+    //Creates the circle button controls at th ebottom of the slideshow
     function createSlideControls(){
-      //numSlides = $slides.children().length;
       var $slidesFooter = '<div class="slides-footer">' +
                             '<div class="slideshow-control">' +
                               '<div class="slideshow-arrow prev"></div>' +
@@ -151,6 +167,7 @@ $( document ).ready(function() {
       $slideshow.append($slidesFooter);
     }
 
+    //Turn on the slide controls
     function initSlideControls(){
       $controls = $slideshow.find(".slideshow-control");
       $button = $controls.find(".slide-button-container input");
@@ -173,6 +190,7 @@ $( document ).ready(function() {
       });
     }
 
+    //Move the stack - put the new slide on top and move others back
     function animateSlides(newSlideSrc){
       var $newSlide;
       var $curSlide;
@@ -194,9 +212,6 @@ $( document ).ready(function() {
         //unbind any drag events
         $(this).off("touchstart touchend mouseleave touchmove");
       });
-
-
-      //Animate current slide off screen
 
       //Move any slides above the new slide (only animate if user is not rolled over slides)
       if(!slideDragged){
@@ -232,6 +247,7 @@ $( document ).ready(function() {
       }
     }
 
+    //Turn on the rollover actions for the slides
     function initSlidesRollover(){
       $slides.hover(over,out);
 
@@ -244,10 +260,12 @@ $( document ).ready(function() {
       }
     }
 
+    //Turn off the rollover actions
     function killSlidesRollover(){
       $slides.off();
     }
 
+    //Turn on the dragging for the slides (for mobile)
     function initSlideDrag(){
       setHandlers($slides.find(".slide:eq(0)"));
 
@@ -276,39 +294,37 @@ $( document ).ready(function() {
           });
         });
 
+        //Check ghow much the slide has moved when th euser lets go of it. If it moves more than set amount (200px for large screens, 100px for small screens) left or right then user is trying to go to the next slide
         function checkAmountMoved(isDragging,event){
           var $curSlide;
 
           if(!$(event.target).hasClass("slide")){
             $curSlide = $(event.target).parents(".slide");
           }
+
           var limit = 200;
           if($(window).width() < 768){
             limit = 100;
           }
 
+          //Determine how much the slide has been dragged
           if(isDragging){
             if(amountMoved > limit || amountMoved < -limit){
               $curSlide.off();
               dragSwitchImage($curSlide)
-              /*if(amountMoved > limit){
-                slideDirection = "right";
-                dragSwitchImage($curSlide);
-              }
-              else{
-                slideDirection = "left";
-                dragSwitchImage($curSlide);
-              }*/
             }
           }
+          //User is not trying to go  to the next slide. Put the slide back.
           else{
             TweenMax.to($slide,0.2,{x:0, ease: Power3.easeOut, onComplete: clearProps});
           }
 
+          //Reset the slide transforms
           function clearProps(){
             TweenMax.set($slide,{clearProps: "transform"});
           }
 
+          //Switch images
           function dragSwitchImage($curSlide){
             var $nextSlideLink = $slides.find(".slide:eq("+($curSlide.index()+1)+")");
             $nextSlideLink = $nextSlideLink.find("a");
