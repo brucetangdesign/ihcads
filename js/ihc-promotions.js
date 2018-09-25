@@ -1,17 +1,17 @@
 $( document ).ready(function() {
-  var $ads = $(".ihc-ads");
+  var $promotions = $(".ihc-promotions");
 
   //Check if there is a slideshow on the page. If so activate it.
-  if($ads.length){
-    $ads.each(function(){
+  if($promotions.length){
+    $promotions.each(function(){
       activateSlideshow($(this));
     });
   }
 
   //Activate the slideshow
-  function activateSlideshow($ads){
-    var $slideshow = $ads.find(".slideshow");
-    var $slidesContainer = $ads.find(".slides-container");
+  function activateSlideshow($promotions){
+    var $slideshow = $promotions.find(".slideshow");
+    var $slidesContainer = $promotions.find(".slides-container");
     var $slides = $slideshow.find(".slides");
     var $controls;
     var $button;

@@ -1,7 +1,7 @@
-.ihc-ads {
+.ihc-promotions {
   background-image: url("../images/ad-bg-pattern.png");
   background-repeat: repeat; }
-  .ihc-ads .ihc-ad-title {
+  .ihc-promotions .ihc-promotion-title {
     margin-top: 40px;
     margin-bottom: 20px;
     margin-left: auto;
@@ -11,7 +11,7 @@
     font-size: 13px;
     font-weight: 400;
     color: #aaaaaa; }
-  .ihc-ads .slideshow-section {
+  .ihc-promotions .slideshow-section {
     -webkit-display: flex;
     -moz-display: flex;
     -ms-display: flex;
@@ -32,7 +32,7 @@
     margin-right: auto;
     padding: 0;
     z-index: 200; }
-    .ihc-ads .slideshow-section img {
+    .ihc-promotions .slideshow-section img {
       width: 100%;
       display: block;
       -webkit-user-select: none;
@@ -40,7 +40,7 @@
       -moz-user-select: none;
       -o-user-select: none;
       user-select: none; }
-  .ihc-ads .slides-container {
+  .ihc-promotions .slides-container {
     -webkit-display: flex;
     -moz-display: flex;
     -ms-display: flex;
@@ -52,13 +52,13 @@
     display: flex;
     position: relative;
     width: 100%; }
-  .ihc-ads .slideshow, .ihc-ads .slides-footer {
+  .ihc-promotions .slideshow, .ihc-promotions .slides-footer {
     position: relative;
     width: 100%; }
     @media (max-width: 768px) {
-      .ihc-ads .slideshow, .ihc-ads .slides-footer {
+      .ihc-promotions .slideshow, .ihc-promotions .slides-footer {
         position: static; } }
-  .ihc-ads .slideshow {
+  .ihc-promotions .slideshow {
     z-index: 200;
     -webkit-display: flex;
     -moz-display: flex;
@@ -75,7 +75,7 @@
     -o-justify-content: center;
     justify-content: center;
     flex-wrap: wrap; }
-  .ihc-ads .slides {
+  .ihc-promotions .slides {
     -webkit-display: flex;
     -moz-display: flex;
     -ms-display: flex;
@@ -94,7 +94,7 @@
     z-index: 1;
     width: 250px;
     height: 250px; }
-  .ihc-ads .slide {
+  .ihc-promotions .slide {
     position: absolute;
     background-color: #000000;
     width: 250px;
@@ -208,15 +208,15 @@
           img{ opacity: 0.25; transition-delay: 0.4s; -webkit-transition-delay: 0.4s;}
         }
         */ }
-    .ihc-ads .slide:nth-child(1) {
+    .ihc-promotions .slide:nth-child(1) {
       z-index: 4; }
-    .ihc-ads .slide:nth-child(2) {
+    .ihc-promotions .slide:nth-child(2) {
       z-index: 3; }
-    .ihc-ads .slide:nth-child(3) {
+    .ihc-promotions .slide:nth-child(3) {
       z-index: 2; }
-    .ihc-ads .slide:nth-child(4) {
+    .ihc-promotions .slide:nth-child(4) {
       z-index: 1; }
-  .ihc-ads .slides-footer {
+  .ihc-promotions .slides-footer {
     -webkit-display: flex;
     -moz-display: flex;
     -ms-display: flex;
@@ -238,9 +238,9 @@
     align-items: baseline;
     padding: 13px 0;
     margin-left: auto; }
-    .ihc-ads .slides-footer.right {
+    .ihc-promotions .slides-footer.right {
       margin-left: 0; }
-  .ihc-ads .slideshow-control {
+  .ihc-promotions .slideshow-control {
     -webkit-display: flex;
     -moz-display: flex;
     -ms-display: flex;
@@ -257,11 +257,11 @@
     align-items: center;
     margin: auto; }
     @media (max-width: 480px) {
-      .ihc-ads .slideshow-control {
+      .ihc-promotions .slideshow-control {
         margin-left: auto;
         margin-right: auto;
         margin-bottom: 20px; } }
-  .ihc-ads .slideshow-arrow {
+  .ihc-promotions .slideshow-arrow {
     display: none;
     /*
     width: 9px;
@@ -284,7 +284,7 @@
       &.next{ margin-left: 15px; }
     }
     */ }
-  .ihc-ads .control-button-container, .ihc-ads ul.control-button-container {
+  .ihc-promotions .control-button-container, .ihc-promotions ul.control-button-container {
     -webkit-display: flex;
     -moz-display: flex;
     -ms-display: flex;
@@ -304,24 +304,24 @@
     list-style-type: none;
     padding: 0;
     margin: auto; }
-    .ihc-ads .control-button-container li, .ihc-ads ul.control-button-container li {
+    .ihc-promotions .control-button-container li, .ihc-promotions ul.control-button-container li {
       padding-left: 6px !important;
       padding-right: 6px !important; }
-  .ihc-ads .slide-button-container {
+  .ihc-promotions .slide-button-container {
     position: relative; }
-    .ihc-ads .slide-button-container > * {
+    .ihc-promotions .slide-button-container > * {
       width: 10px;
       height: 10px; }
-    .ihc-ads .slide-button-container input {
+    .ihc-promotions .slide-button-container input {
       position: absolute;
       margin: 0;
       opacity: 0;
       cursor: pointer; }
-      .ihc-ads .slide-button-container input:checked + span {
+      .ihc-promotions .slide-button-container input:checked + span {
         -webkit-transition: background-color 0.3s linear;
         transition: background-color 0.3s linear;
         background-color: #acacac; }
-    .ihc-ads .slide-button-container span {
+    .ihc-promotions .slide-button-container span {
       display: block;
       top: 0;
       left: 0;
@@ -330,4 +330,4 @@
       border: 1px solid #acacac;
       background-color: #FFFFFF; }
 
-/*# sourceMappingURL=ad-style.css.map */
+/*# sourceMappingURL=ihc-promotions-style.css.map */
